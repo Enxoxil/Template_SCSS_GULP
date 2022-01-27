@@ -1,5 +1,5 @@
-let proj_folders = "";
-let src_folders = "";
+let proj_folders = "dist";
+let src_folders = "#src";
 
 
 
@@ -31,7 +31,7 @@ let {src, dest} = require('gulp'),
     browsersync = require('browser-sync').create();
 
 function browserSync (params){
-    browserSync.init({
+    browsersync.init({
         server : {
             baseDir : "/" + proj_folders + "/",
         },
