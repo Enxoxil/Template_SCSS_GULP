@@ -32,8 +32,9 @@ let { src, dest } = require("gulp"),
     gulp = require("gulp"),
     browsersync = require("browser-sync").create(),
     fileinclude = require("gulp-file-include"),
-    del = require("del"),
-    scss = require("gulp-sass");
+    del = require("del");
+
+const scss = require('gulp-sass')(require('sass'));
 
 function browserSync() { // функция запуска сервера
     browsersync.init({
@@ -59,7 +60,7 @@ function css(){
     .pipe(
         scss({
             outputStyle: "expanded"
-        }).on('error', scss.logError)
+        })
     )
     .pipe(dest(path.build.css))
     .pipe(browsersync.stream())
