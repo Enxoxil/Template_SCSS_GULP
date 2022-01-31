@@ -1,33 +1,45 @@
+@font-face {
+    font-family: "spaceagecyrillic-regular";
+    font-display: swap;
+    src: url("../fonts/spaceagecyrillic-regular.woff") format("woff"),
+        url("../fonts/spaceagecyrillic-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
 body {
-  font-size: 36px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+    font-size: 36px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
 }
 
 h1 {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 span {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 .no-webp div {
-  background: url("../img/image.png"); }
+    background: url("../img/image.png");
+}
 
 div {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 @media (max-width: 767px) {
-  span {
-    font-size: 15px;
-  }
+    span {
+        font-size: 15px;
+    }
 
-  div {
-    font-size: 20px;
-  }
+    div {
+        font-size: 20px;
+    }
 }
 
-.webp div { background: url(../img/image.webp); }
+.webp div {
+    background: url(../img/image.webp);
+}
