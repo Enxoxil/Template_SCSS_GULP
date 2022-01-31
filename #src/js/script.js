@@ -1,4 +1,6 @@
-@@include('alert.js');
+@@include('alert.js'); // нет ошибки
+
+// START ===== функция проверяет может ли браузер отображатьь webp формат изображений ===== 
 
 function testWebP(callback) {
 
@@ -17,3 +19,5 @@ function testWebP(callback) {
             document.querySelector('body').classList.add('no-webp');
     }
     });
+
+// END ===== функция проверяет может ли браузер отображатьь webp формат изображений ===== 

@@ -1,4 +1,4 @@
-// mixins
+// START ===== миксина для добавления шрифтов =====
 @mixin font($font_name, $file_name, $weight, $style) {
     @font-face {
         font-family: $font_name;
@@ -9,6 +9,8 @@
         font-style: #{$style};
     }
 }
+
+// END ===== миксина для добавления шрифтов =====
 
 //  imports
 
