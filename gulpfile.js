@@ -6,10 +6,25 @@
 =====================================
 */
 
+/*
+=====================================
+        Для установки сборщика в новый 
+    проект надо скопировать (
+       - #src,
+       - gulpfile.js,
+       - package.json
+    ) в корень проекта, после запустить
+    терминал и прописать 'npm i'.
+        Будут установлены все пакеты.
+        После установки запускаем GULP 
+=====================================
+*/
+
 // START ===== variable =====
-let p_Fold = "dist"; // путь к продакшн папке
+let p_Fold = require("path").basename(__dirname); // путь к продакшн папке 
+// имя папки будет взято то в которой лежат исходники 
 let s_Fold = "#src"; // путь к исходникам
-let fs = require("fs"); // вспомогательная переменная для автодобавления шрифтов в css
+let fs = require("fs"); // вспомогательная переменная для автодобавления шрифтов в scss
 // END ===== variable =====
 
 // START ===== path =====
@@ -70,7 +85,8 @@ const scss = require("gulp-sass")(require("sass"));
 
 function browserSync() {
     // функция запуска сервера аддон browsersync
-    browsersync.init({ // инициализация 
+    browsersync.init({
+        // инициализация
         server: {
             baseDir: "./" + p_Fold + "/",
         },
@@ -79,9 +95,8 @@ function browserSync() {
     });
 }
 
-
-function html() { 
-    // Работа с HTML 
+function html() {
+    // Работа с HTML
     return src(path.src.html)
         .pipe(fileinclude())
         .pipe(webphtml()) /* заменит тег img в HTML на <picture>
@@ -92,30 +107,34 @@ function html() {
         .pipe(browsersync.stream());
 }
 
-function css() { 
+function css() {
     // Работа со стилями
     return src(path.src.css)
-        .pipe( // scss to css 
+        .pipe(
+            // scss to css
             scss({
                 outputStyle: "expanded",
             }),
         )
         .pipe(group_media()) // группиовка медиазапросов
-        .pipe( // Автопрефиксер для всех браузеров последние 5 версий
+        .pipe(
+            // Автопрефиксер для всех браузеров последние 5 версий
             autoprefixer({
-                overrideBrowserslist: ["last 5 versions"], 
+                overrideBrowserslist: ["last 5 versions"],
                 cascade: true, // стиль написания
             }),
         )
         .pipe(
-            webpcss({ // добавление стилей webp формата в css с помощью функции в js и автоматически добавит соответствующий класс 
+            webpcss({
+                // добавление стилей webp формата в css с помощью функции в js и автоматически добавит соответствующий класс
                 webpClass: ".webp",
                 noWebpClass: ".no-webp",
             }),
         )
         .pipe(dest(path.build.css))
         .pipe(clean_css())
-        .pipe( // минификация css файла с подключением в HTML 
+        .pipe(
+            // минификация css файла с подключением в HTML
             rename({
                 extname: ".min.css",
             }),
@@ -124,12 +143,12 @@ function css() {
         .pipe(browsersync.stream());
 }
 
-function js() { 
-    // Работа с JS 
+function js() {
+    // Работа с JS
     return src(path.src.js)
         .pipe(fileinclude())
         .pipe(dest(path.build.js))
-        .pipe(uglify()) // минификация js файла 
+        .pipe(uglify()) // минификация js файла
         .pipe(
             rename({
                 extname: ".min.js",
@@ -139,16 +158,19 @@ function js() {
         .pipe(browsersync.stream());
 }
 
-function images() { // Работа с изображениями
+function images() {
+    // Работа с изображениями
     return src(path.src.img)
-        .pipe( // сжатие webp формата 
+        .pipe(
+            // сжатие webp формата
             webp({
                 quality: 70,
             }),
         )
         .pipe(dest(path.build.img))
         .pipe(src(path.src.img))
-        .pipe( // сжатие изображений 
+        .pipe(
+            // сжатие изображений
             imagemin({
                 progressive: true,
                 svgoPlugins: [{ removeViewBox: false }],
@@ -179,7 +201,7 @@ gulp.task("svgSprite", function () {
 });
 
 gulp.task("otf2ttf", function () {
-    // ВРУЧНУЮ! Преобразовуем otf to ttf а дальше ttf to woff/woff2 в авто режиме
+    // ВРУЧНУЮ! Преобразовуем otf to ttf
     // запустить задачу gulp otf2ttf в консоли
     return src([s_Fold + "/fonts/*.otf"])
         .pipe(
@@ -187,16 +209,24 @@ gulp.task("otf2ttf", function () {
                 formats: ["ttf"],
             }),
         )
-        .pipe(dest(s_Fold + "/fonts/"));
+        .pipe(dest(s_Fold + "/fonts/")); 
+        // выгружаем в папку с исходниками для дальнейшего авто преобразования в woff woff2
 });
 
-function fonts() {// работаем со шрифтами
+function fonts() {
+    // работаем со шрифтами
     //конвертер шрифтов в woff и woff2
-    src(path.src.fonts).pipe(ttf2woff()).pipe(dest(path.build.fonts));
-    return src(path.src.fonts).pipe(ttf2woff2()).pipe(dest(path.build.fonts));
+    src(path.src.fonts)
+        .pipe(ttf2woff())
+        .pipe(dest(path.build.fonts));
+    return src(path.src.fonts)
+        .pipe(ttf2woff2())
+        .pipe(dest(path.build.fonts));
 }
 
-function fontsStyler() { // Пишем шрифты в fonts.scss но в ручную меняем в fonts.scss 
+function fontsStyler() {
+    // Ф-я подключит шрифты в fonts.scss, но в ручную меняем в fonts.scss
+    // font family (1) font weight (3) font style (4) 
     let file_content = fs.readFileSync(s_Fold + "/scss/fonts.scss");
     if (file_content == "") {
         fs.writeFile(s_Fold + "/scss/fonts.scss", "", techFunc);
@@ -214,7 +244,7 @@ function fontsStyler() { // Пишем шрифты в fonts.scss но в руч
                                 '", "' +
                                 fontname +
                                 '", "400", "normal");\r\n',
-                                techFunc,
+                            techFunc,
                         );
                     }
                     c_fontname = fontname;
@@ -226,7 +256,8 @@ function fontsStyler() { // Пишем шрифты в fonts.scss но в руч
 
 function techFunc() {} // сервисная функция
 
-function watchFiles() { // Функция следилка
+function watchFiles() {
+    // Функция следилка
     gulp.watch([path.watch.html], html); // Ловим изменения в html и запускаем ф-ю html
     gulp.watch([path.watch.js], js); // Ловим изменения в js
     gulp.watch([path.watch.css], css); // ловим изменения в css и запускаем ф-ю css
@@ -238,19 +269,17 @@ function clean() {
 }
 // END ===== function =====
 
-
 // START ===== сценарии =====
 let build = gulp.series(
     // запуск сценария который запускает ниже перечисленные функции
     clean,
     gulp.parallel(css, html, js, images, fonts),
-    gulp.parallel(fontsStyler, browserSync)
-); 
+    gulp.parallel(fontsStyler, browserSync),
+);
 
 let watch = gulp.parallel(build, watchFiles);
 // Стартовый сценарий
 // END ===== сценарии =====
-
 
 // START ===== экспортируем аддоны в переменные для работы =====
 exports.fontsStyler = fontsStyler;
