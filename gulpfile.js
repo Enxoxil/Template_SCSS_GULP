@@ -138,7 +138,7 @@ function js() {
 
 function images() { // Работа с изображениями
     return src(path.src.img)
-        .pipe( // сжатие ebp формата 
+        .pipe( // сжатие webp формата 
             webp({
                 quality: 70,
             }),
